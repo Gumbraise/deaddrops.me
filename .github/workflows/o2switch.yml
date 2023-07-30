@@ -35,11 +35,11 @@ jobs:
     - name: Install Node Dependencies
       run: yarn install
     - name: Deploy to Server
-      uses: easingthemes/ssh-deploy@v2
+      uses: easingthemes/ssh-deploy@main
       with:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         ARGS: '-o StrictHostKeyChecking=no'
-        SOURCE: ${{ env.REMOTE_PATH }}
+        SOURCE: ${{ secrets.REMOTE_PATH }}
         EXCLUDE: '.git,.github,var'
