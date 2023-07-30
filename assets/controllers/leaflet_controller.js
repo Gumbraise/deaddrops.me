@@ -13,9 +13,7 @@ export default class extends Controller {
         })
 
         this.map.on('zoomend', (event) => {
-            if (event.target._zoom > 8) {
-                this.fetchMarkers();
-            }
+            this.fetchMarkers();
         });
 
         this.map.on('drag', (event) => {
