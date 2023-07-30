@@ -37,8 +37,10 @@ jobs:
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@v2
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        args: '-o StrictHostKeyChecking=no'
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        ARGS: '-o StrictHostKeyChecking=no'
         local-path: '.'
         remote-path: ${{ env.REMOTE_PATH }}
-        exclude: '.git,.github,var'
+        EXCLUDE: '.git,.github,var'
