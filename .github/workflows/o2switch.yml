@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  symfony-tests:
+  build:
     runs-on: ubuntu-latest
     steps:
     #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
@@ -34,12 +34,12 @@ jobs:
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Install Node Dependencies
       run: yarn install
+    - name: Build Node Assets
+      run: yarn build
     - name: Deploy to Server
-      uses: easingthemes/ssh-deploy@v2
-      with:
+      uses: easingthemes/ssh-deploy@main
+      env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        ARGS: '-o StrictHostKeyChecking=no'
-        SOURCE: ${{ secrets.REMOTE_PATH }}
-        EXCLUDE: '.git,.github,var'
+        TARGET: ${{ secrets.REMOTE_TARGET }}
