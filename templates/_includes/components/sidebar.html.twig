@@ -1,3 +1,9 @@
-<div class="rounded-xl p-4 bg-dd-dark-A border border-dd-dark-D">
-    <p class="text-white">djjd</p>
+<div class="bg-dd-dark-C space-y-4 rounded-xl relative h-screen-dvh px-4 py-6 overflow-y-scroll">
+    {% for deaddrop in deaddrops %}
+        <div class="rounded-xl p-4 bg-dd-dark-A border border-dd-dark-D">
+            <p class="text-white">{{ deaddrop.name }}</p>
+            <p class="text-white">{{ deaddrop.longitude }}</p>
+            <p class="text-white">{{ deaddrop.latitude }}</p>
+        </div>
+    {% endfor %}
 </div>
