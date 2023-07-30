@@ -1,19 +1,22 @@
 <div class="bg-dd-dark-C space-y-4 rounded-xl relative h-screen-dvh px-4 py-6 overflow-y-scroll">
     {% for deaddrop in deaddrops %}
-        <div class="relative rounded-xl bg-dd-dark-A border-dd-dark-D">
-            <div class="p-4 space-y-2">
-                <p class="text-white font-bold">{{ deaddrop.name }}</p>
-                <div class="text-xs uppercase font-black">
-                    <p class="text-gray-600">{{ deaddrop.size }}</p>
-                    <p class="text-gray-500">{{ deaddrop.getPlace }}</p>
+        <a href=""
+           class="block group">
+            <div class="relative rounded-xl bg-dd-dark-A border-dd-dark-D group-hover:bg-dd-dark-D">
+                <div class="p-4 space-y-2">
+                    <p class="text-white font-bold">{{ deaddrop.name }}</p>
+                    <div class="text-xs uppercase font-black">
+                        <p class="text-gray-600">{{ deaddrop.size }}</p>
+                        <p class="text-gray-500">{{ deaddrop.getPlace }}</p>
+                    </div>
+                </div>
+                <div class="absolute top-0 right-0 rounded-tr-full rounded-bl-full bg-dd-dark-D border-l border-b border-dd-dark-B px-3">
+                    <p class="text-gray-400 text-xs font-black"
+                       title="{{ deaddrop.createdAt|date('d/m/Y') }}">
+                        {{ deaddrop.getCreatedAtReadable }}
+                    </p>
                 </div>
             </div>
-            <div class="absolute top-0 right-0 rounded-tr-full rounded-bl-full bg-dd-dark-D border-l border-b border-dd-dark-B px-3">
-                <p class="text-gray-400 text-xs font-black"
-                   title="{{ deaddrop.createdAt|date('d/m/Y') }}">
-                    {{ deaddrop.getCreatedAtReadable }}
-                </p>
-            </div>
-        </div>
+        </a>
     {% endfor %}
 </div>
