@@ -9,14 +9,20 @@ module.exports = {
       colors: {
         'dd': {
           'dark': {
-            'A': '#222133',
+            'A': '#080808',
             'B': '#26293B',
-            'C': '#191E24',
-            'D': '#26353B',
+            'C': '#000000',
+            'D': '#191919',
             'E': '#213333',
           }
         }
-      }
+      },
+      height: {
+        'screen-dvh': '100dvh',
+      },
+      maxHeight: {
+        'screen-dvh': '100dvh',
+      },
     },
   },
   plugins: [],
