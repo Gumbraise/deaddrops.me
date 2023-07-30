@@ -48,7 +48,7 @@ export default class extends Controller {
 
         const deadrops = await getDeadrops(bounds.getSouth(), bounds.getNorth(), bounds.getWest(), bounds.getEast());
         deadrops.forEach(deaddrop => {
-            this.writeMarker(deaddrop.id, deaddrop.latitude, deaddrop.longitude);
+            this.writeMarker(deaddrop.deaddropId, deaddrop.latitude, deaddrop.longitude);
         });
     }
 

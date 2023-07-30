@@ -26,7 +26,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: DeaddropRepository::class)]
 class Deaddrop
 {
-    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -79,7 +78,7 @@ class Deaddrop
     #[ORM\Column(length: 3, nullable: true)]
     private ?string $country = null;
 
-    #[Groups(['deaddrop:get'])]
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Column]
     private ?int $deaddropId = null;
 

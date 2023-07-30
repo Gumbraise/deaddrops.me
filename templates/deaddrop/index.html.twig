@@ -43,8 +43,8 @@
                 <td>{{ deaddrop.country }}</td>
                 <td>{{ deaddrop.deaddropId }}</td>
                 <td>
-                    <a href="{{ path('app_deaddrop_show', {'id': deaddrop.id}) }}">show</a>
-                    <a href="{{ path('app_deaddrop_edit', {'id': deaddrop.id}) }}">edit</a>
+                    <a href="{{ path('app_deaddrop_show', {'deaddropId': deaddrop.deaddropId}) }}">show</a>
+                    <a href="{{ path('app_deaddrop_edit', {'deaddropId': deaddrop.deaddropId}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

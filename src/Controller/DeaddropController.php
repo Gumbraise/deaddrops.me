@@ -42,7 +42,7 @@ class DeaddropController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
+    #[Route('/{deaddropId}', name: 'show', methods: ['GET'])]
     public function show(Deaddrop $deaddrop): Response
     {
         return $this->render('deaddrop/show.html.twig', [
@@ -50,7 +50,7 @@ class DeaddropController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Route('/{deaddropId}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Deaddrop $deaddrop, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(DeaddropType::class, $deaddrop);
@@ -68,7 +68,7 @@ class DeaddropController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Route('/{deaddropId}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Deaddrop $deaddrop, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$deaddrop->getId(), $request->request->get('_token'))) {

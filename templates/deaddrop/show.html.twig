@@ -68,7 +68,7 @@
 
     <a href="{{ path('app_deaddrop_index') }}">back to list</a>
 
-    <a href="{{ path('app_deaddrop_edit', {'id': deaddrop.id}) }}">edit</a>
+    <a href="{{ path('app_deaddrop_edit', {'deaddropId': deaddrop.deaddropId}) }}">edit</a>
 
     {{ include('deaddrop/_delete_form.html.twig') }}
 {% endblock %}

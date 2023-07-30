@@ -1,6 +1,6 @@
 <div class="bg-dd-dark-C space-y-4 rounded-xl relative h-screen-dvh px-4 py-6 overflow-y-scroll">
     {% for deaddrop in deaddrops %}
-        <a href=""
+        <a href="{{ path('app_deaddrop_show', {deaddropId: deaddrop.deaddropId}) }}"
            class="block group">
             <div class="relative rounded-xl bg-dd-dark-A border-dd-dark-D group-hover:bg-dd-dark-D">
                 <div class="p-4 space-y-2">
