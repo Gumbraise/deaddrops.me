@@ -307,4 +307,10 @@ class Deaddrop
     {
         return Carbon::instance($this->createdAt)->diffForHumans();
     }
+
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
+    public function getPlace(): string
+    {
+        return "$this->address, $this->city, $this->country";
+    }
 }
