@@ -46,7 +46,11 @@ export default class extends Controller {
     async fetchMarkers() {
         const bounds = this.map.getBounds();
 
-        const deadrops = await getDeadrops(bounds.getSouth(), bounds.getNorth(), bounds.getWest(), bounds.getEast());
+        const deadrops = await getDeadrops(bounds.getSouth(), bounds.getNorth(), bounds.getWest(), bounds.getEast())
+            .then((r) => {
+                this.dispatch('listDeaddrop', {detail: r});
+                return r;
+            });
         deadrops.forEach(deaddrop => {
             this.writeMarker(deaddrop.deaddropId, deaddrop.latitude, deaddrop.longitude);
         });

@@ -3,15 +3,15 @@
 {% block title %}Hello HomepageController!{% endblock %}
 
 {% block body %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-h-screen-dvh">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 h-screen-dvh">
         <div
-                {{ stimulus_controller('test') }}
-                {{ stimulus_action('test', 'test', 'leaflet:openDeaddrop@window') }}
+                {{ stimulus_controller('deaddrop--sidebar', {
+                    listUrl: path('api_deadrop_sidebar_list'),
+                }) }}
+                {{ stimulus_action('deaddrop--sidebar', 'showList', 'leaflet:listDeaddrop@window') }}
                 class="col-span-1"
         >
-            {{ include('_includes/components/sidebar.html.twig', {
-                deaddrops: deaddrops,
-            }) }}
+
         </div>
         <div
                 {{ stimulus_controller('leaflet', {

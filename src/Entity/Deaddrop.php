@@ -35,10 +35,11 @@ class Deaddrop
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[Groups(['deaddrop:get'])]
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Column(length: 255)]
     private ?string $size = null;
 
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
