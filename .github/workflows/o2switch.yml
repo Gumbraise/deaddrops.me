@@ -41,6 +41,5 @@ jobs:
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
         ARGS: '-o StrictHostKeyChecking=no'
-        local-path: '.'
-        remote-path: ${{ env.REMOTE_PATH }}
+        SOURCE: ${{ env.REMOTE_PATH }}
         EXCLUDE: '.git,.github,var'
