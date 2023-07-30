@@ -2,23 +2,41 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\DeaddropRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource]
+#[Get(normalizationContext: ['groups' => ['deaddrop:get']])]
+#[GetCollection(normalizationContext: ['groups' => ['deaddrop:getcollection']])]
+#[ApiFilter(RangeFilter::class, properties: ['longitude', 'latitude'])]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt' => 'ASC'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 #[ORM\Entity(repositoryClass: DeaddropRepository::class)]
 class Deaddrop
 {
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
+    #[Groups(['deaddrop:get'])]
     #[ORM\Column(length: 255)]
     private ?string $size = null;
 
@@ -28,9 +46,11 @@ class Deaddrop
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $about = null;
 
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
@@ -43,6 +63,7 @@ class Deaddrop
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
     #[ORM\ManyToOne(inversedBy: 'deaddrops')]
     private ?User $author = null;
 
@@ -58,6 +79,7 @@ class Deaddrop
     #[ORM\Column(length: 3, nullable: true)]
     private ?string $country = null;
 
+    #[Groups(['deaddrop:get'])]
     #[ORM\Column]
     private ?int $deaddropId = null;
 
@@ -278,5 +300,11 @@ class Deaddrop
         $this->deaddropId = $deaddropId;
 
         return $this;
+    }
+
+    #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
+    public function getCreatedAtReadable(): string
+    {
+        return Carbon::instance($this->createdAt)->diffForHumans();
     }
 }
