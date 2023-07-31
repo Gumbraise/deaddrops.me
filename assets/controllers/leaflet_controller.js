@@ -7,6 +7,7 @@ import {get as getDeadrops} from "../services/fetchDeaddrops";
 export default class extends Controller {
     connect() {
         this.dragTimeout = null;
+        this.markers = [];
 
         this.map = L.map(this.element, {
             center: [47, 0], zoom: 4,
@@ -46,6 +47,9 @@ export default class extends Controller {
 
         const deadrops = await getDeadrops(bounds.getSouth(), bounds.getNorth(), bounds.getWest(), bounds.getEast())
             .then((r) => {
+                this.markers.forEach(marker => this.map.removeLayer(marker));
+                this.markers = [];
+
                 this.dispatch('listDeaddrop', {detail: r});
                 return r;
             });
@@ -55,10 +59,12 @@ export default class extends Controller {
     }
 
     writeMarker(id, lat, long) {
-        L.marker([lat, long], {icon: this.myIcon, id})
+        const marker = L.marker([lat, long], {icon: this.myIcon, id})
             .addTo(this.map)
             .on('click', (e) => {
                 this.dispatch('openDeaddrop', {detail: {id: e.target.options.id}});
             });
+
+        this.markers.push(marker);
     }
 }
