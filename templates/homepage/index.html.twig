@@ -6,10 +6,12 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 h-screen-dvh">
         <div
                 {{ stimulus_controller('deaddrop--sidebar', {
+                    loading: include('_includes/loading.html.twig'),
                     listUrl: path('api_deadrop_sidebar_list'),
+                    showUrl: path('app_deaddrop_show', {deaddropId: 0}),
                 }) }}
-                {{ stimulus_action('deaddrop--sidebar', 'showList', 'leaflet:listDeaddrop@window') }}
-                class="col-span-1 flex justify-center items-center"
+                data-action="leaflet:listDeaddrop@window->deaddrop--sidebar#showList leaflet:openDeaddrop@window->deaddrop--sidebar#showDeaddrop"
+                class="col-span-1 w-full"
         >
             {{ include('_includes/loading.html.twig') }}
         </div>
@@ -17,6 +19,7 @@
                 {{ stimulus_controller('leaflet', {
                     markers: deaddrops|json_encode,
                 }) }}
+                {{ stimulus_action('leaflet', 'fetchMarkers', 'deaddrop--sidebar:fetchMarkers@window') }}
                 class="col-span-1 lg:col-span-3 h-full flex justify-center items-center md:rounded-l-xl"
         >
             <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-xl text-white">

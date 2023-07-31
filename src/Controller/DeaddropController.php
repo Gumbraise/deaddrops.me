@@ -43,9 +43,15 @@ class DeaddropController extends AbstractController
     }
 
     #[Route('/{deaddropId}', name: 'show', methods: ['GET'])]
-    public function show(Deaddrop $deaddrop): Response
+    public function show(Deaddrop $deaddrop, Request $request): Response
     {
-        return $this->render('deaddrop/show.html.twig', [
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('deaddrop/show/sidebar.html.twig', [
+                'deaddrop' => $deaddrop,
+            ]);
+        }
+
+        return $this->render('deaddrop/show/index.html.twig', [
             'deaddrop' => $deaddrop,
         ]);
     }
