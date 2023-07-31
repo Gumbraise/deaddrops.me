@@ -62,9 +62,7 @@ export default class extends Controller {
         const marker = L.marker([lat, long], {icon: this.myIcon, id})
             .addTo(this.map)
             .on('click', (e) => {
-                console.log(e.target.options.id)
                 const disptach = this.dispatch('openDeaddrop', {detail: {id: e.target.options.id}});
-                console.log(disptach)
             });
 
         this.markers.push(marker);
