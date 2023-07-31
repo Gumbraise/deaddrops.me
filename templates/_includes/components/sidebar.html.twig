@@ -1,7 +1,7 @@
 <div class="bg-dd-dark-C space-y-4 rounded-xl relative h-screen-dvh px-4 py-6 overflow-y-scroll">
     {% for deaddrop in deaddrops %}
         <a
-                {{ stimulus_action('deaddrop--sidebar', 'showDeaddrop') }}
+                {{ stimulus_action('deaddrop--sidebar', 'showDeaddrop', null, {lat: deaddrop.latitude, lng: deaddrop.longitude}) }}
                 href="{{ path('app_deaddrop_show', {deaddropId: deaddrop.deaddropId}) }}"
                 class="block group"
         >

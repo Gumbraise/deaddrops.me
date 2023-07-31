@@ -45,6 +45,11 @@ export default class extends Controller {
 
         this.actualTab = 'deaddrop';
 
+        const lat = event.detail.lat ?? event.params.lat;
+        const lng = event.detail.lng ?? event.params.lng;
+
+        this.dispatch('zoomTo', {detail: {lat, lng}});
+
         this.element.innerHTML = this.loadingValue;
 
         this.actualUrl = url;

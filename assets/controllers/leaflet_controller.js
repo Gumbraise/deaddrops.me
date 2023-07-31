@@ -62,9 +62,19 @@ export default class extends Controller {
         const marker = L.marker([lat, long], {icon: this.myIcon, id})
             .addTo(this.map)
             .on('click', (e) => {
-                const disptach = this.dispatch('openDeaddrop', {detail: {id: e.target.options.id}});
+                this.dispatch('openDeaddrop', {detail: {id: e.target.options.id, ...marker.getLatLng()}});
             });
 
         this.markers.push(marker);
+    }
+
+    zoomTo(event) {
+        const lat = event.detail.lat;
+        const lng = event.detail.lng;
+        const zoom = event.detail.zoom || 16;
+
+        this.map.flyTo({lat, lng}, zoom, {
+            duration: 1
+        });
     }
 }
