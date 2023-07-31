@@ -28,7 +28,7 @@ export default class extends Controller {
         });
 
         L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
-            maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            maxZoom: 19
         }).addTo(this.map);
 
         this.myIcon = L.icon({
