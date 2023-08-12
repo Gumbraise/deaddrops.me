@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Leaflet from "./components/Leaflet";
 import {get as getDeaddrops} from "../../services/fetchDeaddrops";
+import Sidebar from "./components/Sidebar/Sidebar";
 
 export default class Deaddrop extends Component {
     constructor(props) {
@@ -48,7 +49,9 @@ export default class Deaddrop extends Component {
     render() {
         return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 h-screen-dvh">
             <div className="col-span-1 w-full">
-
+                <Sidebar
+                    deaddrops={this.state.deaddrops}
+                />
             </div>
             <div className="col-span-1 lg:col-span-3 md:rounded-l-xl">
                 <Leaflet
