@@ -29,18 +29,17 @@ export default function Leaflet(props) {
         }}
     >
         <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
 
         {deaddropsMarkers.map((point, index) => (<Marker
             key={index}
-            position={point.position}
+            position={[point.latitude, point.longitude]}
             icon={new L.Icon({
                 iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
             })}
         >
-            <Popup>{point.popupContent}</Popup>
+            <Popup>{point.name}</Popup>
         </Marker>))}
 
 
