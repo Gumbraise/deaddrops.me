@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Leaflet from "./components/Leaflet";
-import {get as getDeadrops} from "../../services/fetchDeaddrops";
+import {get as getDeaddrops} from "../../services/fetchDeaddrops";
 
 export default class Deaddrop extends Component {
     constructor(props) {
@@ -8,7 +8,7 @@ export default class Deaddrop extends Component {
 
         this.dragTimeout = null;
         this.state = {
-            deaddropsMarkers: [],
+            deaddrops: [],
         };
 
         this.handleZoomEnd = this.handleZoomEnd.bind(this);
@@ -31,19 +31,17 @@ export default class Deaddrop extends Component {
     }
 
     async fetchMarkers(map) {
-        const deadrops = await getDeadrops(map.getBounds()._southWest.lat, map.getBounds()._northEast.lat, map.getBounds()._southWest.lng, map.getBounds()._northEast.lng)
+        const deaddrops = await getDeaddrops(map.getBounds()._southWest.lat, map.getBounds()._northEast.lat, map.getBounds()._southWest.lng, map.getBounds()._northEast.lng)
             .then((r) => {
-                this.setState({deaddropsMarkers: []})
+                this.setState({deaddrops: []})
 
                 return r;
             });
 
-        deadrops.forEach(deaddrop => {
-            this.setState(prevState => ({
-                deaddropsMarkers: [...prevState.deaddropsMarkers, {
-                    position: [deaddrop.latitude, deaddrop.longitude], popupContent: deaddrop.name
-                }]
-            }))
+        deaddrops.forEach(deaddrop => {
+            this.setState((prevState) => ({
+                deaddrops: [...prevState.deaddrops, deaddrop]
+            }));
         });
     }
 
@@ -55,7 +53,7 @@ export default class Deaddrop extends Component {
             <div className="col-span-1 lg:col-span-3 md:rounded-l-xl">
                 <Leaflet
                     className="h-full"
-                    deaddropsMarkers={this.state.deaddropsMarkers}
+                    deaddropsMarkers={this.state.deaddrops}
                     onZoomEnd={this.handleZoomEnd}
                     onMoveEnd={this.handleMoveEnd}
                 />
