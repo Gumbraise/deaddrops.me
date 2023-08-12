@@ -48,11 +48,18 @@ export default class Deaddrop extends Component {
     }
 
     render() {
-        return (<Leaflet
-            className="h-screen-dvh"
-            deaddropsMarkers={this.state.deaddropsMarkers}
-            onZoomEnd={this.handleZoomEnd}
-            onMoveEnd={this.handleMoveEnd}
-        />)
+        return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 h-screen-dvh">
+            <div className="col-span-1 w-full">
+
+            </div>
+            <div className="col-span-1 lg:col-span-3 md:rounded-l-xl">
+                <Leaflet
+                    className="h-full"
+                    deaddropsMarkers={this.state.deaddropsMarkers}
+                    onZoomEnd={this.handleZoomEnd}
+                    onMoveEnd={this.handleMoveEnd}
+                />
+            </div>
+        </div>)
     }
 }

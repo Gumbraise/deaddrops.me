@@ -1,9 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div {{ react_component('Deaddrop') }}>
-        Chargement...
+    <div
+            {{ react_component('Deaddrop') }}
+            class="h-screen-dvh"
+    >
+        {{ include('_includes/loading.html.twig', {
+            message: "Processing...",
+        }) }}
     </div>
 {% endblock %}
-
-

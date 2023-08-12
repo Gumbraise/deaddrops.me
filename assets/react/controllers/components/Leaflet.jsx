@@ -21,7 +21,7 @@ export default function Leaflet(props) {
     }
 
     return (<MapContainer
-        className="h-screen-dvh"
+        className="h-screen-dvh md:rounded-l-xl"
         center={center}
         zoom={zoom}
         whenReady={(map) => {
