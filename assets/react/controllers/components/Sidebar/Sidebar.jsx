@@ -4,21 +4,25 @@ import SidebarCard from "./SidebarCard";
 
 export default function Sidebar(props) {
     const {
-        deaddrops
+        deaddrops, onMarkerSelect
     } = props;
 
     return (
         <div className="bg-dd-dark-C space-y-4 rounded-xl relative h-screen-dvh px-4 py-6 overflow-y-scroll">
-            {deaddrops.map((point, index) => (
-                <SidebarCard
+            {deaddrops.map((deaddrop, index) => (
+                <a
+                    className="block group"
                     key={index}
-                    deaddrop={point}
-                />
+                    onClick={() => onMarkerSelect(deaddrop)}
+                >
+                    <SidebarCard
+                        deaddrop={deaddrop}
+                    />
+                </a>
             ))}
         </div>
     );
 }
-
 
 Sidebar.propTypes = {
     deaddrops: PropTypes.array,

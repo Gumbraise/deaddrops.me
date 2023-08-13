@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, createRef} from 'react';
 import Leaflet from "./components/Leaflet";
 import {get as getDeaddrops} from "../../services/fetchDeaddrops";
 import Sidebar from "./components/Sidebar/Sidebar";
@@ -9,12 +9,14 @@ export default class Deaddrop extends Component {
 
         this.dragTimeout = null;
         this.state = {
-            deaddrops: [],
+            deaddrops: [], selectedMarker: null,
         };
+
+        this.mapRef = createRef();
 
         this.handleZoomEnd = this.handleZoomEnd.bind(this);
         this.handleMoveEnd = this.handleMoveEnd.bind(this);
-
+        this.handleMarkerSelect = this.handleMarkerSelect.bind(this);
     }
 
     handleZoomEnd(map) {
@@ -29,6 +31,10 @@ export default class Deaddrop extends Component {
         this.dragTimeout = setTimeout(() => {
             this.fetchMarkers(map);
         }, 500);
+    }
+
+    handleMarkerSelect(selectedMarker) {
+        this.setState({selectedMarker});
     }
 
     async fetchMarkers(map) {
@@ -51,14 +57,17 @@ export default class Deaddrop extends Component {
             <div className="col-span-1 w-full">
                 <Sidebar
                     deaddrops={this.state.deaddrops}
+                    onMarkerSelect={this.handleMarkerSelect}
                 />
             </div>
             <div className="col-span-1 lg:col-span-3 md:rounded-l-xl">
                 <Leaflet
+                    ref={this.mapRef}
                     className="h-full"
-                    deaddropsMarkers={this.state.deaddrops}
+                    {...this.state}
                     onZoomEnd={this.handleZoomEnd}
                     onMoveEnd={this.handleMoveEnd}
+                    onMarkerSelect={this.handleMarkerSelect}
                 />
             </div>
         </div>)

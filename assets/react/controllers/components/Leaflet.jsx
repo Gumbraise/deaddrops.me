@@ -1,18 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {MapContainer, TileLayer, Marker, Popup, useMapEvent, useMapEvents} from 'react-leaflet'
+import React, {forwardRef, useEffect, useRef} from 'react';
+import {MapContainer, TileLayer, Marker, Popup, useMapEvents} from 'react-leaflet'
 import PropTypes from 'prop-types';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
 
-export default function Leaflet(props) {
+const Leaflet = forwardRef((props, ref) => {
     const {
-        center, zoom, deaddropsMarkers, onZoomEnd, onMoveEnd
+        center, zoom, deaddrops, onZoomEnd, onMoveEnd, selectedMarker, onMarkerSelect
     } = props;
+
+    const mapRef = useRef(null);
 
     const Events = () => {
         const map = useMapEvents({
-            zoomend: (event) => {
+            zoomend: () => {
                 onZoomEnd(map);
-            }, dragend: (event) => {
+            }, dragend: () => {
                 onMoveEnd(map);
             },
         });
@@ -20,10 +22,28 @@ export default function Leaflet(props) {
         return null
     }
 
+    useEffect(() => {
+        if (mapRef.current && selectedMarker) {
+            console.log(selectedMarker, mapRef.current)
+
+            mapRef.current.flyTo(
+                [selectedMarker.latitude, selectedMarker.longitude],
+                16,
+                {
+                    duration: 2,
+                }
+            );
+        }
+    }, [selectedMarker]);
+
     return (<MapContainer
         className="h-screen-dvh md:rounded-l-xl"
-        center={center}
-        zoom={zoom}
+        center={center ?? [47, 0]}
+        zoom={zoom ?? 4}
+        ref={(map) => {
+            ref.current = map;
+            mapRef.current = map;
+        }}
         whenReady={(map) => {
             onZoomEnd(map.target);
         }}
@@ -32,32 +52,26 @@ export default function Leaflet(props) {
             url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png"
         />
 
-        {deaddropsMarkers.map((point, index) => (<Marker
-            key={index}
-            position={[point.latitude, point.longitude]}
-            icon={new L.Icon({
-                iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
-            })}
-        >
-            <Popup>{point.name}</Popup>
-        </Marker>))}
+        {deaddrops.map((point, index) => (
+            <Marker
+                eventHandlers={{
+                    click: () => {
+                        onMarkerSelect(point)
+                    },
+                }}
+                key={index}
+                position={[point.latitude, point.longitude]}
+                icon={new L.Icon({
+                    iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
+                })}
+            >
+                <Popup>{point.name}</Popup>
+            </Marker>
+        ))}
 
 
         <Events/>
     </MapContainer>);
-}
+})
 
-
-Leaflet.propTypes = {
-    center: PropTypes.array,
-    zoom: PropTypes.number,
-    deaddropsMarkers: PropTypes.array,
-    onZoomEnd: PropTypes.func,
-    onMoveEnd: PropTypes.func,
-};
-
-Leaflet.defaultProps = {
-    center: [47, 0], zoom: 4, deaddropsMarkers: [], onZoomEnd: () => {
-    }, onMoveEnd: () => {
-    },
-};
+export default Leaflet;
