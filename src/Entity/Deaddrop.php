@@ -6,6 +6,7 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -29,6 +30,7 @@ class Deaddrop
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(identifier: false)]
     private ?int $id = null;
 
     #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
@@ -80,7 +82,8 @@ class Deaddrop
     private ?string $country = null;
 
     #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]
-    #[ORM\Column]
+    #[ApiProperty(description: 'The deaddrop id from deaddrops.com', identifier: true)]
+    #[ORM\Column(unique: true, nullable: false)]
     private ?int $deaddropId = null;
 
     public function __construct()
