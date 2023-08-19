@@ -22,7 +22,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Vich\UploaderBundle\Handler\DownloadHandler;
 use Vich\UploaderBundle\Handler\UploadHandler;
 
-readonly class UpdateDeadrops
+readonly class UpdateDeaddrops
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

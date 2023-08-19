@@ -2,7 +2,7 @@ import {Controller} from '@hotwired/stimulus';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import {get as getDeadrops} from "../services/fetchDeaddrops";
+import {get as getDeaddrops} from "../services/fetchDeaddrops";
 
 export default class extends Controller {
     connect() {
@@ -45,7 +45,7 @@ export default class extends Controller {
     async fetchMarkers() {
         const bounds = this.map.getBounds();
 
-        const deadrops = await getDeadrops(bounds.getSouth(), bounds.getNorth(), bounds.getWest(), bounds.getEast())
+        const deaddrops = await getDeaddrops(bounds.getSouth(), bounds.getNorth(), bounds.getWest(), bounds.getEast())
             .then((r) => {
                 this.markers.forEach(marker => this.map.removeLayer(marker));
                 this.markers = [];
@@ -53,7 +53,7 @@ export default class extends Controller {
                 this.dispatch('listDeaddrop', {detail: r});
                 return r;
             });
-        deadrops.forEach(deaddrop => {
+        deaddrops.forEach(deaddrop => {
             this.writeMarker(deaddrop.deaddropId, deaddrop.latitude, deaddrop.longitude);
         });
     }

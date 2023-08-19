@@ -7,7 +7,7 @@
         <div
                 {{ stimulus_controller('deaddrop--sidebar', {
                     loading: include('_includes/loading.html.twig'),
-                    listUrl: path('api_deadrop_sidebar_list'),
+                    listUrl: path('api_deaddrop_sidebar_list'),
                     showUrl: path('app_deaddrop_show', {deaddropId: 0}),
                 }) }}
                 data-action="leaflet:listDeaddrop@window->deaddrop--sidebar#showList leaflet:openDeaddrop@window->deaddrop--sidebar#showDeaddrop"

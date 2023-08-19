@@ -2,23 +2,23 @@
 
 namespace App\Controller\Api;
 
-use App\Service\UpdateDeadrops;
+use App\Service\UpdateDeaddrops;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api/deadrop', name: 'api_deadrop_')]
+#[Route('/api/deaddrop', name: 'api_deaddrop_')]
 class DeaddropApiController extends AbstractController
 {
     /**
-     * @param UpdateDeadrops $deadropsService
+     * @param UpdateDeaddrops $deaddropsService
      * @return Response
      */
     #[Route('/deaddrop', name: 'index')]
-    public function index(UpdateDeadrops $deadropsService): Response
+    public function index(UpdateDeaddrops $deaddropsService): Response
     {
-        return $this->json($deadropsService->update());
+        return $this->json($deaddropsService->update());
     }
 
     /**

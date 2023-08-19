@@ -22,7 +22,7 @@ class DeaddropImageRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return DeadropImage[] Returns an array of DeadropImage objects
+//     * @return DeaddropImage[] Returns an array of DeaddropImage objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class DeaddropImageRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?DeadropImage
+//    public function findOneBySomeField($value): ?DeaddropImage
 //    {
 //        return $this->createQueryBuilder('d')
 //            ->andWhere('d.exampleField = :val')
