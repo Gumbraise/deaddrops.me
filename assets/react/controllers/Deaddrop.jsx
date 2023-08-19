@@ -1,6 +1,6 @@
 import React, {Component, createRef} from 'react';
 import Leaflet from "./components/Leaflet";
-import {get as getDeaddrops} from "../../services/fetchDeaddrops";
+import {getAll as getDeaddrops} from "../../services/fetchDeaddrops";
 import Sidebar from "./components/Sidebar/Sidebar";
 
 export default class Deaddrop extends Component {

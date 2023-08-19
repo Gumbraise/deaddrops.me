@@ -2,7 +2,7 @@ import {Controller} from '@hotwired/stimulus';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import {get as getDeaddrops} from "../services/fetchDeaddrops";
+import {getAll as getDeaddrops} from "../services/fetchDeaddrops";
 
 export default class extends Controller {
     connect() {
