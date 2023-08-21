@@ -11,7 +11,8 @@ const Leaflet = forwardRef((props, ref) => {
         onZoomEnd,
         onMoveEnd,
         selectedMarker,
-        onMarkerSelect
+        onMarkerSelect,
+        markerFolder
     } = props;
 
     const mapRef = useRef(null);
@@ -66,7 +67,10 @@ const Leaflet = forwardRef((props, ref) => {
                 key={index}
                 position={[point.latitude, point.longitude]}
                 icon={new L.Icon({
-                    iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
+                    iconUrl: markerFolder + "/good_pin.svg",
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12],
+                    popupAnchor: [0, -12],
                 })}
             >
                 <Popup>{point.name}</Popup>

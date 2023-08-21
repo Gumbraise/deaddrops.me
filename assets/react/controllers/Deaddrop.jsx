@@ -103,6 +103,7 @@ export default class Deaddrop extends Component {
                     onZoomEnd={this.handleZoomEnd}
                     onMoveEnd={this.handleMoveEnd}
                     onMarkerSelect={this.handleMarkerSelect}
+                    markerFolder={this.props.markerFolder}
                 />
             </div>
         </div>)

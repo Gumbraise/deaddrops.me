@@ -2,7 +2,9 @@
 
 {% block body %}
     <div
-            {{ react_component('Deaddrop') }}
+            {{ react_component('Deaddrop', {
+                markerFolder: asset('images/static/'),
+            }) }}
             class="h-screen-dvh"
     >
         {{ include('_includes/loading.html.twig', {
