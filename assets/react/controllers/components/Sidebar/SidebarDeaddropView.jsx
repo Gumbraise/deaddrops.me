@@ -39,6 +39,18 @@ export default function SidebarDeaddropView(props) {
                     </p>
                 </div>
             </div>
+            {/*<div className="px-4 py-8 space-y-3">*/}
+            {/*    <div className="space-y-2">*/}
+            {/*        <p className="text-lg font-bold">Images</p>*/}
+            {/*        <div className="w-full relative">*/}
+            {/*            {deaddrop.images.map((image, index) => (*/}
+            {/*                <div key={index} className="w-full bg-gray-500 rounded-xl">*/}
+            {/*                    <img src={image.imagePath} className="rounded-xl"/>*/}
+            {/*                </div>*/}
+            {/*            ))}*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <div className="px-4 py-8 space-y-3">
                 <div className="space-y-2">
                     <p className="text-lg font-bold">Activity</p>
@@ -52,9 +64,12 @@ export default function SidebarDeaddropView(props) {
 }
 
 SidebarDeaddropView.propTypes = {
-    deaddrop: PropTypes.object,
+    deaddrop: PropTypes.object.isRequired,
+    backToMap: PropTypes.func.isRequired,
 };
 
 SidebarDeaddropView.defaultProps = {
     deaddrop: {},
+    backToMap: () => {
+    }
 };

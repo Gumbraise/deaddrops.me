@@ -5,8 +5,12 @@ namespace App\Entity;
 use App\Repository\DeaddropImageRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Asset\Packages;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Vich\UploaderBundle\Mapping\PropertyMapping;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelperInterface;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: DeaddropImageRepository::class)]
@@ -136,5 +140,11 @@ class DeaddropImage
         }
 
         return $this;
+    }
+
+    #[Groups(['deaddrop:get'])]
+    public function getImagePath(): ?string
+    {
+        return '/images/deaddrops/' . $this->getImageName();
     }
 }

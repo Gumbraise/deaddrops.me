@@ -232,6 +232,7 @@ class Deaddrop
     /**
      * @return Collection<int, DeaddropImage>
      */
+    #[Groups(['deaddrop:get'])]
     public function getImages(): Collection
     {
         return $this->images;
