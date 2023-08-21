@@ -67,7 +67,7 @@ const Leaflet = forwardRef((props, ref) => {
                 key={index}
                 position={[point.latitude, point.longitude]}
                 icon={new L.Icon({
-                    iconUrl: markerFolder + "/good_pin.svg",
+                    iconUrl: markerFolder + "good_pin.svg",
                     iconSize: [24, 24],
                     iconAnchor: [12, 12],
                     popupAnchor: [0, -12],
