@@ -21,6 +21,8 @@
 
 /.idea/
 /public/images/
+!/public/images/static/
+
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
