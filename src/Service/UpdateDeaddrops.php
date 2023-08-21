@@ -53,7 +53,7 @@ readonly class UpdateDeaddrops
                 $deaddrop->setCreatedAt($element['date-created']);
                 $deaddrop->setLatitude($element['coordinates']['latitude'] ?? null);
                 $deaddrop->setLongitude($element['coordinates']['longitude'] ?? null);
-                $deaddrop->setAddress($element['location']['street-adress'] ?? null);
+                $deaddrop->setAddress($element['location']['street-address'] ?? null);
                 $deaddrop->setCity($element['location']['city'] ?? null);
                 $deaddrop->setCountry($element['location']['country'] ?? null);
                 $deaddrop->setAbout($element['about']);
@@ -66,8 +66,8 @@ readonly class UpdateDeaddrops
                         continue;
                     }
                     $image = new DeaddropImage();
-                    $image->setImageFile($value);
-                    $image->setImageName($value);
+                    $image->setImageFile($value["file"]);
+                    $image->setImageName($value["name"]);
                     $image->setLabel($key);
                     $image->setDeaddrop($deaddrop);
 
@@ -90,37 +90,44 @@ readonly class UpdateDeaddrops
         try {
             $response = $httpClient->request('GET', $url);
 
-            if ($response->getStatusCode() === 200) {
-                $content = $response->getContent();
-
-                $dom = new DOMDocument();
-                @$dom->loadHTML($content);
-
-                $baseUrl = "https://deaddrops.com/db/";
-
-                return [
-                    'id' => intval($dom->getElementsByTagName('td')->item(10)->textContent),
-                    'name' => $dom->getElementsByTagName('td')->item(12)->textContent,
-                    'drop-type' => $dom->getElementsByTagName('td')->item(14)->textContent,
-                    'size' => $dom->getElementsByTagName('td')->item(16)->textContent,
-                    'date-created' => DateTimeImmutable::createFromFormat('Y-m-d', $dom->getElementsByTagName('td')->item(18)->textContent),
-                    'location' => $this->location(
-                        $dom->getElementsByTagName('td')->item(20)->textContent
-                    ),
-                    'coordinates' => $this->coordinates(
-                        $dom->getElementsByTagName('td')->item(22)->textContent
-                    ),
-                    'images' => [
-                        'overview' => $dom->getElementsByTagName('img')->item(0) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(0)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(0)->parentNode->getAttribute('href')) : null) : null,
-                        'medium distance' => $dom->getElementsByTagName('img')->item(1) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(1)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(1)->parentNode->getAttribute('href')) : null) : null,
-                        'closeup' => $dom->getElementsByTagName('img')->item(2) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(2)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(2)->parentNode->getAttribute('href')) : null) : null,
-                    ],
-                    'permalink' => $dom->getElementsByTagName('td')->item(24)->textContent,
-                    'status' => $this->getStatus($dom->getElementsByTagName('option')),
-                    'about' => $dom->getElementsByTagName('td')->item(41)->textContent,
-                    'url' => $url,
-                ];
+            if ($response->getStatusCode() !== 200) {
+                return null;
             }
+
+            $content = $response->getContent();
+
+            $dom = new DOMDocument();
+            @$dom->loadHTML($content);
+
+            $baseUrl = "https://deaddrops.com/db/";
+
+            if (str_contains($dom->getElementsByTagName('body')->item(0)->textContent, 'ERROR')) {
+                return null;
+            }
+
+            return [
+                'id' => intval($dom->getElementsByTagName('td')->item(10)->textContent),
+                'name' => $dom->getElementsByTagName('td')->item(12)->textContent,
+                'drop-type' => $dom->getElementsByTagName('td')->item(14)->textContent,
+                'size' => $dom->getElementsByTagName('td')->item(16)->textContent,
+                'date-created' => DateTimeImmutable::createFromFormat('Y-m-d', $dom->getElementsByTagName('td')->item(18)->textContent),
+                'location' => $this->location(
+                    $dom->getElementsByTagName('td')->item(20)->textContent
+                ),
+                'coordinates' => $this->coordinates(
+                    $dom->getElementsByTagName('td')->item(22)->textContent
+                ),
+                'images' => [
+                    'overview' => $dom->getElementsByTagName('img')->item(0) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(0)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(0)->parentNode->getAttribute('href')) : null) : null,
+                    'medium distance' => $dom->getElementsByTagName('img')->item(1) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(1)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(1)->parentNode->getAttribute('href')) : null) : null,
+                    'closeup' => $dom->getElementsByTagName('img')->item(2) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(2)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(2)->parentNode->getAttribute('href')) : null) : null,
+                ],
+                'permalink' => $dom->getElementsByTagName('td')->item(24)->textContent,
+                'status' => $this->getStatus($dom->getElementsByTagName('option')),
+                'about' => $dom->getElementsByTagName('td')->item(41)->textContent,
+                'url' => $url,
+            ];
+
         } catch (\Throwable $e) {
             return null;
         }
@@ -150,7 +157,7 @@ readonly class UpdateDeaddrops
         $elements = explode(', ', $location);
 
         return [
-            'street-adress' => $elements[0],
+            'street-address' => $elements[0],
             'city' => $elements[1],
             'country' => $elements[2],
         ];
@@ -166,7 +173,7 @@ readonly class UpdateDeaddrops
         return null;
     }
 
-    private function getImage($url): ?File
+    private function getImage($url): ?array
     {
         $package = new Package(new EmptyVersionStrategy());;
 
@@ -180,9 +187,12 @@ readonly class UpdateDeaddrops
                 $tempImageFilename = basename(parse_url($response->getInfo()['url'], PHP_URL_PATH));
 
                 $filesystem = new Filesystem();
-                $filesystem->dumpFile($tempImagePath . '/' . $tempImageFilename, $response->getContent());
+                $filesystem->dumpFile($tempImageFilename, $response->getContent());
 
-                return new File($tempImagePath . '/' . $tempImageFilename);
+                return [
+                    "file" => new File($tempImagePath . '/' . $tempImageFilename),
+                    "name" => $tempImageFilename,
+                ];
             }
         } catch (Exception $e) {
             return null;
