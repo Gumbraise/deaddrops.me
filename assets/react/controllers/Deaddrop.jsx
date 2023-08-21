@@ -1,6 +1,6 @@
 import React, {Component, createRef} from 'react';
 import Leaflet from "./components/Leaflet";
-import {getAll as getDeaddrops} from "../../services/fetchDeaddrops";
+import {get as getDeaddrop, getAll as getDeaddrops} from "../../services/fetchDeaddrops";
 import Sidebar from "./components/Sidebar/Sidebar";
 
 export default class Deaddrop extends Component {
@@ -9,7 +9,12 @@ export default class Deaddrop extends Component {
 
         this.dragTimeout = null;
         this.state = {
-            deaddrops: [], selectedMarker: null,
+            deaddrops: [],
+            selectedMarker: null,
+            loading: false,
+            selectedDeaddrop: null,
+            isDeaddropSelected: false,
+            _lastPos: null,
         };
 
         this.mapRef = createRef();
@@ -34,7 +39,14 @@ export default class Deaddrop extends Component {
     }
 
     handleMarkerSelect(selectedMarker) {
-        this.setState({selectedMarker});
+        this.setState({
+            selectedMarker,
+            _lastPos: {
+                ...this.mapRef.current._lastCenter,
+                zoom: this.mapRef.current._zoom
+            }
+        });
+        this.fetchDeaddrop(selectedMarker.deaddropId);
     }
 
     async fetchMarkers(map) {
@@ -52,12 +64,35 @@ export default class Deaddrop extends Component {
         });
     }
 
+    async fetchDeaddrop(deaddropId) {
+        this.setState({loading: true, isDeaddropSelected: true})
+        return await getDeaddrop(deaddropId)
+            .then((r) => {
+                this.setState({loading: false, selectedDeaddrop: r})
+            });
+    }
+
+    backToMap() {
+        this.setState({isDeaddropSelected: false})
+        this.mapRef.current.flyTo(
+            [this.state._lastPos.lat, this.state._lastPos.lng],
+            this.state._lastPos.zoom,
+            {
+                duration: .5,
+            }
+        );
+    }
+
     render() {
         return (<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 h-screen-dvh">
             <div className="col-span-1 w-full">
                 <Sidebar
                     deaddrops={this.state.deaddrops}
+                    loading={this.state.loading}
+                    selectedDeaddrop={this.state.selectedDeaddrop}
+                    isDeaddropSelected={this.state.isDeaddropSelected}
                     onMarkerSelect={this.handleMarkerSelect}
+                    backToMap={this.backToMap.bind(this)}
                 />
             </div>
             <div className="col-span-1 lg:col-span-3 md:rounded-l-xl">

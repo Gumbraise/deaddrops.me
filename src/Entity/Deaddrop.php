@@ -45,6 +45,7 @@ class Deaddrop
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[Groups(['deaddrop:get'])]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $about = null;
 
@@ -56,6 +57,7 @@ class Deaddrop
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
+    #[Groups(['deaddrop:get'])]
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
@@ -309,6 +311,12 @@ class Deaddrop
     public function getCreatedAtReadable(): string
     {
         return Carbon::instance($this->createdAt)->diffForHumans();
+    }
+
+    #[Groups(['deaddrop:get'])]
+    public function getUpdatedAtReadable(): string
+    {
+        return Carbon::instance($this->updatedAt)->diffForHumans();
     }
 
     #[Groups(['deaddrop:get', 'deaddrop:getcollection'])]

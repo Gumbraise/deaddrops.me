@@ -5,7 +5,13 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png"
 
 const Leaflet = forwardRef((props, ref) => {
     const {
-        center, zoom, deaddrops, onZoomEnd, onMoveEnd, selectedMarker, onMarkerSelect
+        center,
+        zoom,
+        deaddrops,
+        onZoomEnd,
+        onMoveEnd,
+        selectedMarker,
+        onMarkerSelect
     } = props;
 
     const mapRef = useRef(null);
@@ -24,8 +30,6 @@ const Leaflet = forwardRef((props, ref) => {
 
     useEffect(() => {
         if (mapRef.current && selectedMarker) {
-            console.log(selectedMarker, mapRef.current)
-
             mapRef.current.flyTo(
                 [selectedMarker.latitude, selectedMarker.longitude],
                 16,

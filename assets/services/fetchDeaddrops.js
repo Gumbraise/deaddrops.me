@@ -19,3 +19,14 @@ export function getAllByTerm(searchTerm, order = "desc") {
             console.error(error);
         });
 }
+
+export function get(deaddropId) {
+    return fetch(`/api/deaddrops/${deaddropId}`)
+        .then(response => response.json())
+        .then(deaddrop => {
+            return deaddrop;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
