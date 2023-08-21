@@ -57,10 +57,6 @@ class Deaddrop
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
-    #[Groups(['deaddrop:get'])]
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
-
     #[ORM\Column]
     private ?bool $isExternalReferrer = null;
 
@@ -88,6 +84,10 @@ class Deaddrop
     #[ORM\Column(unique: true, nullable: false)]
     private ?int $deaddropId = null;
 
+    #[Groups(['deaddrop:get'])]
+    #[ORM\OneToMany(mappedBy: 'deaddrop', targetEntity: DeaddropActivity::class)]
+    private Collection $activities;
+
     public function __construct()
     {
         $this->deaddropId = $this->id;
@@ -95,6 +95,7 @@ class Deaddrop
         $this->updatedAt = new \DateTimeImmutable();
         $this->isExternalReferrer = false;
         $this->images = new ArrayCollection();
+        $this->activities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,16 +182,13 @@ class Deaddrop
         return $this;
     }
 
-    public function getStatus(): ?string
+    #[Groups(['deaddrop:get'])]
+    public function getStatus(): ?array
     {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
+        return $this->activities->last()?->getStatus() ? [
+            "status" => $this->activities->last()?->getStatus(),
+            "date" => $this->activities->last()?->getCreatedAt()->format('d/m/Y'),
+        ] : null;
     }
 
     public function isIsExternalReferrer(): ?bool
@@ -324,5 +322,35 @@ class Deaddrop
     public function getPlace(): string
     {
         return "$this->address, $this->city, $this->country";
+    }
+
+    /**
+     * @return Collection<int, DeaddropActivity>
+     */
+    public function getActivities(): Collection
+    {
+        return $this->activities;
+    }
+
+    public function addActivity(DeaddropActivity $activity): static
+    {
+        if (!$this->activities->contains($activity)) {
+            $this->activities->add($activity);
+            $activity->setDeaddrop($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActivity(DeaddropActivity $activity): static
+    {
+        if ($this->activities->removeElement($activity)) {
+            // set the owning side to null (unless already changed)
+            if ($activity->getDeaddrop() === $this) {
+                $activity->setDeaddrop(null);
+            }
+        }
+
+        return $this;
     }
 }

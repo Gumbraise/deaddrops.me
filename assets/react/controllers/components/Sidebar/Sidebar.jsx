@@ -16,7 +16,7 @@ export default function Sidebar(props) {
 
     return (
         <>
-            <div className="bg-dd-dark-C space-y-4 rounded-xl relative h-screen-dvh px-4 py-6 overflow-y-scroll">
+            <div className="bg-dd-dark-C rounded-xl relative h-screen-dvh overflow-y-scroll">
                 {isDeaddropSelected && (loading ? (
                     <div className="text-white flex items-center justify-center h-screen-dvh">
                         <Loading/>
@@ -30,19 +30,21 @@ export default function Sidebar(props) {
                     </div>
                 ))}
 
-                {!isDeaddropSelected && !loading && (
-                    deaddrops.map((deaddrop, index) => (
-                        <a
-                            className="block group"
-                            key={index}
-                            onClick={() => onMarkerSelect(deaddrop)}
-                        >
-                            <SidebarCard
-                                deaddrop={deaddrop}
-                            />
-                        </a>
-                    ))
-                )}
+                <div className="px-4 py-6 space-y-4">
+                    {!isDeaddropSelected && !loading && (
+                        deaddrops.map((deaddrop, index) => (
+                            <a
+                                className="block group"
+                                key={index}
+                                onClick={() => onMarkerSelect(deaddrop)}
+                            >
+                                <SidebarCard
+                                    deaddrop={deaddrop}
+                                />
+                            </a>
+                        ))
+                    )}
+                </div>
             </div>
         </>
     );

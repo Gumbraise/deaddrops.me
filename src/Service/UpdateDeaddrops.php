@@ -3,10 +3,12 @@
 namespace App\Service;
 
 use App\Entity\Deaddrop;
+use App\Entity\DeaddropActivity;
 use App\Entity\DeaddropImage;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use DOMDocument;
+use DOMElement;
 use DOMNodeList;
 use PHPUnit\Exception;
 use Symfony\Component\Asset\Package;
@@ -51,6 +53,7 @@ readonly class UpdateDeaddrops
                 $deaddrop->setDeaddropId($element['id']);
                 $deaddrop->setName($element['name']);
                 $deaddrop->setCreatedAt($element['date-created']);
+                $deaddrop->setUpdatedAt($element['date-created']);
                 $deaddrop->setLatitude($element['coordinates']['latitude'] ?? null);
                 $deaddrop->setLongitude($element['coordinates']['longitude'] ?? null);
                 $deaddrop->setAddress($element['location']['street-address'] ?? null);
@@ -58,7 +61,14 @@ readonly class UpdateDeaddrops
                 $deaddrop->setCountry($element['location']['country'] ?? null);
                 $deaddrop->setAbout($element['about']);
                 $deaddrop->setSize($element['size']);
-                $deaddrop->setStatus($element['status']);
+
+                $activities = new DeaddropActivity();
+                $activities->setDeaddrop($deaddrop);
+                $activities->setMessage($element['status']['status']);
+                $activities->setStatus($element['status']['status']);
+                $activities->setCreatedAt($element['status']['date']);
+                $this->entityManager->persist($activities);
+
                 $deaddrop->setIsExternalReferrer(true);
 
                 foreach ($element['images'] as $key => $value) {
@@ -85,13 +95,13 @@ readonly class UpdateDeaddrops
         return $elements;
     }
 
-    private function getElements(HttpClientInterface $httpClient, $url)
+    private function getElements(HttpClientInterface $httpClient, $url): ?array
     {
         try {
             $response = $httpClient->request('GET', $url);
 
             if ($response->getStatusCode() !== 200) {
-                return null;
+                dd($response->getStatusCode());
             }
 
             $content = $response->getContent();
@@ -123,19 +133,19 @@ readonly class UpdateDeaddrops
                     'closeup' => $dom->getElementsByTagName('img')->item(2) ? ($this->isImageUrl($baseUrl . $dom->getElementsByTagName('img')->item(2)->parentNode->getAttribute('href')) ? $this->getImage($baseUrl . $dom->getElementsByTagName('img')->item(2)->parentNode->getAttribute('href')) : null) : null,
                 ],
                 'permalink' => $dom->getElementsByTagName('td')->item(24)->textContent,
-                'status' => $this->getStatus($dom->getElementsByTagName('option')),
+                'status' => $this->getStatus($dom->getElementsByTagName('td')->item(37)),
                 'about' => $dom->getElementsByTagName('td')->item(41)->textContent,
                 'url' => $url,
             ];
 
         } catch (\Throwable $e) {
-            return null;
+            dd($e);
         }
     }
 
     private function coordinates($coordinates): array
     {
-        preg_match_all('/(\d+\.\d+) ([NS])  (\d+\.\d+) ([WE])/', $coordinates, $matches);
+        preg_match_all('/(\d+\.\d+) ([NS]) {2}(\d+\.\d+) ([WE])/', $coordinates, $matches);
 
         $latitude = $matches[1][0];
         $longitude = $matches[3][0];
@@ -163,14 +173,33 @@ readonly class UpdateDeaddrops
         ];
     }
 
-    private function getStatus(DOMNodeList $getElementsByTagName): ?string
+    private function getStatus(DOMElement $status): array
     {
-        foreach ($getElementsByTagName as $element) {
-            if ($element->getAttribute('selected') === 'selected') {
-                return trim($element->textContent);
-            }
+        $element = $status->getElementsByTagName('em')->item(0);
+
+        $pattern = '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/';
+
+        if (preg_match($pattern, $status->textContent, $matches)) {
+            $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $matches[0]);
+        } else {
+            $date = new DateTimeImmutable();
         }
-        return null;
+
+        return match (trim($element->textContent)) {
+            DeaddropActivity::DD_NOT_FOUND => [
+                "status" => DeaddropActivity::LOCAL_NOT_FOUND,
+                "date" => $date,
+            ],
+            DeaddropActivity::DD_WORKING => [
+                "status" => DeaddropActivity::LOCAL_WORKING,
+                "date" => $date,
+            ],
+            DeaddropActivity::DD_DEAD => [
+                "status" => DeaddropActivity::LOCAL_DEAD,
+                "date" => $date,
+            ],
+            default => null,
+        };
     }
 
     private function getImage($url): ?array
@@ -181,23 +210,29 @@ readonly class UpdateDeaddrops
 
         try {
             $response = $httpClient->request('GET', $url);
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+        }
+        try {
             if ($response->getStatusCode() === 200) {
                 $tempImagePath = $package->getUrl('images/deaddrops');
 
                 $tempImageFilename = basename(parse_url($response->getInfo()['url'], PHP_URL_PATH));
 
+
                 $filesystem = new Filesystem();
-                $filesystem->dumpFile($tempImageFilename, $response->getContent());
+                $filesystem->dumpFile($tempImagePath . '/' . $tempImageFilename, $response->getContent());
 
                 return [
                     "file" => new File($tempImagePath . '/' . $tempImageFilename),
                     "name" => $tempImageFilename,
                 ];
             }
-        } catch (Exception $e) {
-            return null;
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            dd($e);
         }
-        return null;
+
+        dd($response);
     }
 
     private function isImageUrl($url): bool
