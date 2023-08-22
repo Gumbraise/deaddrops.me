@@ -86,6 +86,7 @@ class Deaddrop
 
     #[Groups(['deaddrop:get'])]
     #[ORM\OneToMany(mappedBy: 'deaddrop', targetEntity: DeaddropActivity::class)]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $activities;
 
     public function __construct()
@@ -180,15 +181,6 @@ class Deaddrop
         $this->latitude = $latitude;
 
         return $this;
-    }
-
-    #[Groups(['deaddrop:get'])]
-    public function getStatus(): ?array
-    {
-        return $this->activities->last()?->getStatus() ? [
-            "status" => $this->activities->last()?->getStatus(),
-            "date" => $this->activities->last()?->getCreatedAt()->format('d/m/Y'),
-        ] : null;
     }
 
     public function isIsExternalReferrer(): ?bool
@@ -322,6 +314,15 @@ class Deaddrop
     public function getPlace(): string
     {
         return "$this->address, $this->city, $this->country";
+    }
+
+    #[Groups(['deaddrop:get'])]
+    public function getStatus(): ?array
+    {
+        return $this->activities->first()?->getStatus() ? [
+            "status" => $this->activities->first()?->getStatus(),
+            "date" => $this->activities->first()?->getCreatedAt()->format('d/m/Y'),
+        ] : null;
     }
 
     #[Groups(['deaddrop:get'])]
