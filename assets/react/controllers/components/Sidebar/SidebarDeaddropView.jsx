@@ -54,7 +54,7 @@ export default function SidebarDeaddropView(props) {
                 {/*</div>*/}
                 <div className="bg-dd-dark-A px-4 py-8 space-y-8 rounded-xl">
                     <div className="space-y-2">
-                        <p className="text-lg font-bold">Activity</p>
+                        <p className="text-lg font-bold">Activity ({deaddrop.activityCount})</p>
                         <p className="text-base">
                             {deaddrop.status.status} on {deaddrop.status.date}
                         </p>

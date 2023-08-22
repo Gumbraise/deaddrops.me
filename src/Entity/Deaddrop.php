@@ -324,6 +324,12 @@ class Deaddrop
         return "$this->address, $this->city, $this->country";
     }
 
+    #[Groups(['deaddrop:get'])]
+    public function getActivityCount(): int
+    {
+        return $this->activities->count();
+    }
+
     /**
      * @return Collection<int, DeaddropActivity>
      */
