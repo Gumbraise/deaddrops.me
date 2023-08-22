@@ -52,23 +52,25 @@ export default function SidebarDeaddropView(props) {
                 {/*        </div>*/}
                 {/*    </div>*/}
                 {/*</div>*/}
-                <div className="bg-dd-dark-A px-4 py-8 space-y-8 rounded-xl">
-                    <div className="space-y-2">
+                <div className="bg-dd-dark-A px-2 pt-8 pb-2 space-y-4 rounded-xl">
+                    <div className="space-y-2 px-2">
                         <p className="text-lg font-bold">Activity ({deaddrop.activityCount})</p>
                         <p className="text-base">
                             {deaddrop.status.status} on {deaddrop.status.date}
                         </p>
                     </div>
-                    <div className="space-y-4 divide-y divide-gray-700">
+                    <div className="space-y-2 divide-y divide-dd-dark-D">
                         {deaddrop.activities.map((activity, index) => (
-                            <div className="space-y-2">
-                                <div className="space-y-1">
-                                    <p className="text-base font-bold">{activity.author}</p>
-                                    <p className="text-sm text-gray-300">{activity.status} on {activity.createdAtDMY}</p>
+                            <div className="pt-2">
+                                <div className="space-y-2 rounded-xl hover:bg-dd-dark-D px-3 py-3">
+                                    <div className="space-y-1">
+                                        <p className="text-base font-bold">{activity.author}</p>
+                                        <p className="text-sm text-gray-300">{activity.status} on {activity.createdAtDMY}</p>
+                                    </div>
+                                    <p className="text-sm">
+                                        {activity.message}
+                                    </p>
                                 </div>
-                                <p className="text-sm">
-                                    {activity.message}
-                                </p>
                             </div>
                         ))}
                     </div>
