@@ -1,0 +1,276 @@
+<header
+        id="navbar"
+        class="z-50 relative"
+        {{ stimulus_controller('dropdown') }}
+>
+    <nav
+            class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+            aria-label="Global"
+    >
+        <div class="flex lg:flex-1">
+            <a href="{{ path('app_homepage') }}" class="-m-1.5 p-1.5">
+                <span class="sr-only">Deaddrops.me</span>
+                <img class="h-8" src="{{ asset('images/omnip/omnip_logo.svg') }}" alt="Deaddrops.me">
+            </a>
+        </div>
+        <div class="flex lg:hidden">
+            <button
+                    {{ stimulus_action('dropdown', 'dropdown') }}
+                    type="button"
+                    class="-m-2.5 inline-flex items-center justify-center rounded-lg p-2.5 text-gray-700 dark:text-gray-400 focus:outline-none"
+            >
+                <span class="sr-only">Ouvrir le menu</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                     aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+                </svg>
+            </button>
+        </div>
+        {#        <div class="hidden lg:flex lg:gap-x-12"> #}
+        {#            {% for key, item in menu.menu %} #}
+        {#                {% if item.slug is defined and item.subitems is not defined %} #}
+        {#                    <a href="{{ item.slug }}" #}
+        {#                       class="font-semibold leading-6 text-gray-900 dark:text-gray-200" #}
+        {#                       aria-current="page">{{ item.title }}</a> #}
+        {#                {% else %} #}
+        {#                    <div #}
+        {#                            {{ stimulus_controller('dropdown') }} #}
+        {#                            id="dropdown-{{ key }}" #}
+        {#                            class="relative" #}
+        {#                    > #}
+        {#                        <button #}
+        {#                                {{ stimulus_action('dropdown', 'dropdown') }} #}
+        {#                                type="button" #}
+        {#                                class="flex items-center gap-x-1 font-semibold leading-6 text-gray-900 dark:text-gray-200" #}
+        {#                                aria-expanded="false"> #}
+        {#                            {{ item.title }} #}
+        {#                            <svg #}
+        {#                                    {{ stimulus_target('dropdown', 'icon') }} #}
+        {#                                    class="h-5 w-5 flex-none text-gray-400 transform transition-transform" #}
+        {#                                    viewBox="0 0 20 20" #}
+        {#                                    fill="currentColor" #}
+        {#                                    aria-hidden="true"> #}
+        {#                                <path fill-rule="evenodd" #}
+        {#                                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" #}
+        {#                                      clip-rule="evenodd"></path> #}
+        {#                            </svg> #}
+        {#                        </button> #}
+        {#                        <div #}
+        {#                                {{ stimulus_target('dropdown', 'dropdown') }} #}
+        {#                                data-transition-enter-active="transition ease-out duration-200" #}
+        {#                                data-transition-enter-from="transform opacity-0 translate-y-1" #}
+        {#                                data-transition-enter-to="transform opacity-100 translate-y-0" #}
+        {#                                data-transition-leave-active="transition ease-in duration-150" #}
+        {#                                data-transition-leave-from="transform opacity-100 translate-y-0" #}
+        {#                                data-transition-leave-to="transform opacity-0 translate-y-1" #}
+        {#                                class="hidden absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5" #}
+        {#                        > #}
+        {#                            <div class="p-4"> #}
+        {#                                {% for subitem in item.subitems %} #}
+        {#                                    <div class="group relative flex items-center gap-x-6 rounded-lg p-4 leading-6 hover:bg-gray-50"> #}
+        {#                                        <img src="{{ subitem.logo ?? null }}" #}
+        {#                                             alt="{{ subitem.title }}" #}
+        {#                                             class="flex h-11 w-11 flex-none items-center justify-center rounded-xl"> #}
+        {#                                        <div class="flex-auto"> #}
+        {#                                            <a href="{{ subitem.slug }}" class="block font-semibold text-gray-900"> #}
+        {#                                                {{ subitem.title }} #}
+        {#                                                <span class="absolute inset-0"></span> #}
+        {#                                            </a> #}
+        {#                                            <p class="mt-1 text-gray-600 text-sm"> #}
+        {#                                                {{ subitem.description }} #}
+        {#                                            </p> #}
+        {#                                        </div> #}
+        {#                                    </div> #}
+        {#                                {% endfor %} #}
+        {#                            </div> #}
+        {#                            <div class="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50"> #}
+        {#                                <a href="{{ path('app_contact') }}" #}
+        {#                                   class="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"> #}
+        {#                                    <svg xmlns="http://www.w3.org/2000/svg" #}
+        {#                                         viewBox="0 0 24 24" #}
+        {#                                         fill="currentColor" #}
+        {#                                         class="h-5 h-5 flex-none text-gray-400"> #}
+        {#                                        <path fill-rule="evenodd" #}
+        {#                                              d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" #}
+        {#                                              clip-rule="evenodd"></path> #}
+        {#                                    </svg> #}
+        {#                                    Faire un audit gratuit #}
+        {#                                </a> #}
+        {#                                <a href="{{ path('app_contact') }}" #}
+        {#                                   class="flex items-center justify-center gap-x-2.5 p-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-100"> #}
+        {#                                    <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor" #}
+        {#                                         aria-hidden="true"> #}
+        {#                                        <path fill-rule="evenodd" #}
+        {#                                              d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" #}
+        {#                                              clip-rule="evenodd"></path> #}
+        {#                                    </svg> #}
+        {#                                    Nous contacter #}
+        {#                                </a> #}
+        {#                            </div> #}
+        {#                        </div> #}
+        {#                    </div> #}
+        {#                {% endif %} #}
+        {#            {% endfor %} #}
+        {#        </div> #}
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end gap-4">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a href="{{ path('app_self_profile') }}"
+                   class="font-semibold leading-6 text-gray-900 dark:text-gray-200">
+                    Mon profil
+                </a>
+                <a href="{{ path('app_logout') }}"
+                   title="Se déconnecter"
+                   class="rounded-lg text-sm text-gray-900
+                        dark:text-gray-200
+                        focus:outline-none">
+                    <span class="sr-only">Se déconnecter</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path fill-rule="evenodd"
+                              d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm5.03 4.72a.75.75 0 010 1.06l-1.72 1.72h10.94a.75.75 0 010 1.5H10.81l1.72 1.72a.75.75 0 11-1.06 1.06l-3-3a.75.75 0 010-1.06l3-3a.75.75 0 011.06 0z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                </a>
+            {% else %}
+                <a href="{{ path('app_login') }}"
+                   class="font-semibold leading-6 text-gray-900 dark:text-gray-200">
+                    {{ 'login'|trans }} <span aria-hidden="true">&rarr;</span>
+                </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div
+            {{ stimulus_target('dropdown', 'dropdown') }}
+            id="mobile-menu"
+            class="hidden lg:hidden"
+            role="dialog"
+            aria-modal="true"
+    >
+        <!-- Background backdrop, show/hide based on slide-over state. -->
+        <div class="fixed inset-0 z-10"></div>
+        <div class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white dark:bg-black px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+            <div class="flex items-center justify-between">
+                <a href="{{ path('app_homepage') }}" class="-m-1.5 p-1.5">
+                    <span class="sr-only">OMNIP</span>
+                    <img class="h-8" src="{{ asset('images/omnip/omnip_logo.svg') }}" alt="Logo d'OMNIP">
+                </a>
+                <button
+                        {{ stimulus_action('dropdown', 'dropdown') }}
+                        type="button"
+                        class="-m-2.5 rounded-lg p-2.5 text-gray-700 dark:text-gray-400 focus:outline-none"
+                >
+                    <span class="sr-only">Fermer le menu</span>
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                         aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-6 flow-root">
+                <div class="-my-6 divide-y divide-gray-500/10 dark:divide-gray-200/25">
+                    {#                    <div class="space-y-2 py-6"> #}
+                    {#                        {% for key, item in menu.menu %} #}
+                    {#                            {% if item.slug is defined and item.subitems is not defined %} #}
+                    {#                                <a href="{{ item.slug }}" #}
+                    {#                                   class=" #}
+                    {#                                        -mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 #}
+                    {#                                        hover:bg-gray-50 #}
+                    {#                                        dark:text-gray-200 #}
+                    {#                                        dark:hover:bg-gray-900 #}
+                    {#                                   "> #}
+                    {#                                    {{ item.title }} #}
+                    {#                                </a> #}
+                    {#                            {% else %} #}
+                    {#                                <div #}
+                    {#                                        {{ stimulus_controller('dropdown') }} #}
+                    {#                                        id="mobiledropdown-{{ key }}" #}
+                    {#                                        class="-mx-3" #}
+                    {#                                > #}
+                    {#                                    <button #}
+                    {#                                            {{ stimulus_action('dropdown', 'dropdown') }} #}
+                    {#                                            type="button" #}
+                    {#                                            class=" #}
+                    {#                                                flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 #}
+                    {#                                                hover:bg-gray-50 #}
+                    {#                                                dark:text-gray-200 #}
+                    {#                                                dark:hover:bg-gray-900 #}
+                    {#                                            " #}
+                    {#                                            aria-controls="disclosure-{{ key }}" #}
+                    {#                                            aria-expanded="false"> #}
+                    {#                                        {{ item.title }} #}
+                    {#                                        <svg #}
+                    {#                                                {{ stimulus_target('dropdown', 'icon') }} #}
+                    {#                                                class="h-5 w-5 flex-none transform transition-transform" #}
+                    {#                                                viewBox="0 0 20 20" #}
+                    {#                                                fill="currentColor" #}
+                    {#                                                aria-hidden="true" #}
+                    {#                                        > #}
+                    {#                                            <path fill-rule="evenodd" #}
+                    {#                                                  d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" #}
+                    {#                                                  clip-rule="evenodd"></path> #}
+                    {#                                        </svg> #}
+                    {#                                    </button> #}
+                    {#                                    <!-- 'Product' sub-menu, show/hide based on menu state. --> #}
+                    {#                                    <div #}
+                    {#                                            {{ stimulus_target('dropdown', 'dropdown') }} #}
+                    {#                                            data-transition-enter-active="transition ease-out duration-300" #}
+                    {#                                            data-transition-enter-from="transform opacity-0 scale-95" #}
+                    {#                                            data-transition-enter-to="transform opacity-100 scale-100" #}
+                    {#                                            data-transition-leave-active="transition ease-in duration-300" #}
+                    {#                                            data-transition-leave-from="transform opacity-100 scale-100" #}
+                    {#                                            data-transition-leave-to="transform opacity-0 scale-95" #}
+                    {#                                            class="hidden mt-2 space-y-2" #}
+                    {#                                            id="disclosure-{{ key }}" #}
+                    {#                                    > #}
+                    {#                                        {% for subitem in item.subitems %} #}
+                    {#                                            <div class="group relative hover:bg-gray-50 py-2 pl-6 pr-3 rounded-lg flex items-center gap-x-6 dark:hover:bg-gray-900"> #}
+                    {#                                                <img src="{{ subitem.logo ?? null }}" #}
+                    {#                                                     alt="{{ subitem.title }}" #}
+                    {#                                                     class="flex h-11 w-11 flex-none items-center justify-center rounded-xl"> #}
+                    {#                                                <div class="flex-auto"> #}
+                    {#                                                    <a href="{{ subitem.slug }}" #}
+                    {#                                                       class="block rounded-lg text-sm font-semibold leading-7 text-gray-900 dark:text-gray-200" #}
+                    {#                                                    > #}
+                    {#                                                        {{ subitem.title }} #}
+                    {#                                                        <span class="absolute inset-0"></span> #}
+                    {#                                                    </a> #}
+                    {#                                                    <p class="mt-1 text-gray-600 dark:text-gray-300 text-sm"> #}
+                    {#                                                        {{ subitem.description }} #}
+                    {#                                                    </p> #}
+                    {#                                                </div> #}
+                    {#                                            </div> #}
+                    {#                                        {% endfor %} #}
+                    {#                                    </div> #}
+                    {#                                </div> #}
+                    {#                            {% endif %} #}
+                    {#                        {% endfor %} #}
+                    {#                    </div> #}
+                    <div class="py-6">
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <a href="{{ path('app_self_profile') }}"
+                               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50
+                                        dark:text-gray-200
+                                        dark:hover:bg-gray-900">
+                                Mon profil
+                            </a>
+                            <a href="{{ path('app_logout') }}"
+                               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50
+                                        dark:text-gray-200
+                                        dark:hover:bg-gray-900">
+                                Se déconnecter
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}"
+                               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50
+                                        dark:text-gray-200
+                                        dark:hover:bg-gray-900">
+                                Se connecter <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
