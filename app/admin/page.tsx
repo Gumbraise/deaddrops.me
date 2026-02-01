@@ -126,6 +126,23 @@ export default function AdminPage() {
     }
   }
 
+  async function editDeaddrop(id: string, currentName: string) {
+    if (!idToken) return;
+    const nextName = window.prompt("New name", currentName);
+    if (!nextName || nextName.trim().length === 0 || nextName.trim() === currentName) return;
+
+    setError(null);
+    setBusy(true);
+    try {
+      await apiFetch(`/admin/deaddrops/${id}`, { method: "PATCH", body: { name: nextName.trim() }, idToken });
+      await refreshList();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (loading) {
     return (
       <main style={{ padding: 24 }}>
@@ -252,6 +269,9 @@ export default function AdminPage() {
                 <td style={{ padding: "6px 0" }}>{d.externalId ?? ""}</td>
                 <td style={{ padding: "6px 0" }}>{d.statusCurrent}</td>
                 <td style={{ padding: "6px 0" }}>
+                  <button onClick={() => editDeaddrop(d.id, d.name)} disabled={busy} style={{ marginRight: 8 }}>
+                    Edit
+                  </button>
                   <button onClick={() => deleteDeaddrop(d.id)} disabled={busy}>
                     Delete
                   </button>
