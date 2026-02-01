@@ -8,6 +8,10 @@ import { useAuth } from "../providers";
 
 type RcPackage = any;
 
+function packageKey(p: RcPackage): string {
+  return String(p?.identifier ?? p?.packageType ?? "").toLowerCase();
+}
+
 export default function SubscribePage() {
   const { user, loading } = useAuth();
   const [packages, setPackages] = useState<RcPackage[]>([]);
@@ -17,12 +21,14 @@ export default function SubscribePage() {
 
   const apiKey = process.env.NEXT_PUBLIC_REVENUECAT_PUBLIC_API_KEY;
 
-  const monthly = useMemo(
-    () => packages.find((p) => String(p?.identifier ?? "").includes("monthly") || String(p?.packageType ?? "").includes("MONTHLY")),
+  const explorerMonthly = useMemo(() => packages.find((p) => packageKey(p).includes("$rc_monthly")), [packages]);
+  const explorerAnnual = useMemo(() => packages.find((p) => packageKey(p).includes("$rc_annual")), [packages]);
+  const proMonthly = useMemo(
+    () => packages.find((p) => packageKey(p).includes("$rc_custom_pro_monthly") || packageKey(p).includes("pro_monthly")),
     [packages],
   );
-  const annual = useMemo(
-    () => packages.find((p) => String(p?.identifier ?? "").includes("annual") || String(p?.packageType ?? "").includes("ANNUAL")),
+  const proAnnual = useMemo(
+    () => packages.find((p) => packageKey(p).includes("$rc_custom_pro_annual") || packageKey(p).includes("pro_annual")),
     [packages],
   );
 
@@ -112,11 +118,20 @@ export default function SubscribePage() {
       {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
 
       <div style={{ display: "grid", gap: 12, maxWidth: 520 }}>
-        <button onClick={() => monthly && buy(monthly)} disabled={!monthly || busy}>
-          {monthly ? `Mensuel: ${labelFor(monthly)}` : "Mensuel (indisponible)"}
+        <h2 style={{ marginBottom: 0 }}>Explorer</h2>
+        <button onClick={() => explorerMonthly && buy(explorerMonthly)} disabled={!explorerMonthly || busy}>
+          {explorerMonthly ? `Mensuel: ${labelFor(explorerMonthly)}` : "Mensuel (indisponible)"}
         </button>
-        <button onClick={() => annual && buy(annual)} disabled={!annual || busy}>
-          {annual ? `Annuel: ${labelFor(annual)}` : "Annuel (indisponible)"}
+        <button onClick={() => explorerAnnual && buy(explorerAnnual)} disabled={!explorerAnnual || busy}>
+          {explorerAnnual ? `Annuel: ${labelFor(explorerAnnual)}` : "Annuel (indisponible)"}
+        </button>
+
+        <h2 style={{ marginBottom: 0, marginTop: 16 }}>Pro / Hunter</h2>
+        <button onClick={() => proMonthly && buy(proMonthly)} disabled={!proMonthly || busy}>
+          {proMonthly ? `Mensuel: ${labelFor(proMonthly)}` : "Mensuel (indisponible)"}
+        </button>
+        <button onClick={() => proAnnual && buy(proAnnual)} disabled={!proAnnual || busy}>
+          {proAnnual ? `Annuel: ${labelFor(proAnnual)}` : "Annuel (indisponible)"}
         </button>
       </div>
 
@@ -131,4 +146,3 @@ export default function SubscribePage() {
     </main>
   );
 }
-
