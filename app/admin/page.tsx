@@ -19,6 +19,9 @@ export default function AdminPage() {
   const [q, setQ] = useState("");
   const [isExternal, setIsExternal] = useState<boolean | undefined>(undefined);
 
+  const [newName, setNewName] = useState("");
+  const [newIsExternal, setNewIsExternal] = useState(false);
+
   const [rangeStart, setRangeStart] = useState(1);
   const [rangeEnd, setRangeEnd] = useState<number | undefined>(undefined);
   const [limit, setLimit] = useState<number | undefined>(100);
@@ -68,12 +71,54 @@ export default function AdminPage() {
     };
   }, [idToken, canAdmin, q, isExternal]);
 
+  async function refreshList() {
+    if (!idToken) return;
+    const qs = new URLSearchParams();
+    if (q.trim()) qs.set("q", q.trim());
+    if (isExternal !== undefined) qs.set("isExternal", String(isExternal));
+    const res = await apiFetch<{ items: any[] }>(`/admin/deaddrops?${qs.toString()}`, { idToken });
+    setDeaddrops(res.items ?? []);
+  }
+
   async function triggerImport(body: any) {
     if (!idToken) return;
     setError(null);
     setBusy(true);
     try {
       await apiFetch("/admin/import/deaddrops", { method: "POST", body, idToken });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function createDeaddrop() {
+    if (!idToken) return;
+    setError(null);
+    setBusy(true);
+    try {
+      await apiFetch("/admin/deaddrops", {
+        method: "POST",
+        body: { name: newName.trim(), isExternal: newIsExternal },
+        idToken,
+      });
+      setNewName("");
+      await refreshList();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function deleteDeaddrop(id: string) {
+    if (!idToken) return;
+    setError(null);
+    setBusy(true);
+    try {
+      await apiFetch(`/admin/deaddrops/${id}`, { method: "DELETE", idToken });
+      await refreshList();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -180,12 +225,24 @@ export default function AdminPage() {
           </select>
         </div>
 
+        <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
+          <input placeholder="New deaddrop name" value={newName} onChange={(e) => setNewName(e.target.value)} />
+          <label style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <input type="checkbox" checked={newIsExternal} onChange={(e) => setNewIsExternal(e.target.checked)} />
+            External
+          </label>
+          <button onClick={createDeaddrop} disabled={busy || newName.trim().length === 0}>
+            Create
+          </button>
+        </div>
+
         <table style={{ width: "100%", marginTop: 12, borderCollapse: "collapse" }}>
           <thead>
             <tr>
               <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Name</th>
               <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>External ID</th>
               <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }}>Status</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ddd" }} />
             </tr>
           </thead>
           <tbody>
@@ -194,6 +251,11 @@ export default function AdminPage() {
                 <td style={{ padding: "6px 0" }}>{d.name}</td>
                 <td style={{ padding: "6px 0" }}>{d.externalId ?? ""}</td>
                 <td style={{ padding: "6px 0" }}>{d.statusCurrent}</td>
+                <td style={{ padding: "6px 0" }}>
+                  <button onClick={() => deleteDeaddrop(d.id)} disabled={busy}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -202,4 +264,3 @@ export default function AdminPage() {
     </main>
   );
 }
-
